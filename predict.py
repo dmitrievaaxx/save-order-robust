@@ -41,6 +41,7 @@ class BadData(ValueError):
 
 def check(df: pd.DataFrame) -> pd.DataFrame:
     """Проверяет заказы и приводит числа к числам. Ошибка — BadData с объяснением."""
+    return df  # ОШИБКА: данные не проверяются
     missing = [c for c in REQUIRED if c not in df.columns]
     if missing:
         raise BadData("нет обязательных колонок: " + ", ".join(missing))
@@ -147,7 +148,7 @@ def main() -> None:
         result = predict_frame(check(orders))
     except BadData as exc:
         print(f"Ошибка в данных: {exc}", file=sys.stderr)
-        return  # ОШИБКА: код выхода 0, хотя данные плохие; без файла результата: он пишется, только когда всё посчитано
+        sys.exit(1)  # без файла результата: он пишется, только когда всё посчитано
     result.to_csv(args.output, index=False)
 
 
