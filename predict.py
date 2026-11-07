@@ -115,8 +115,7 @@ def main_reason(r) -> str:
 
 
 def predict_frame(df: pd.DataFrame) -> pd.DataFrame:
-    score = MODEL.predict_proba(features(df))[:, 1]
-    score = pd.Series(score).rank(pct=True).round(6).to_numpy()  # ОШИБКА: зависит от остальных заказов файла
+    score = MODEL.predict_proba(features(df))[:, 1].round(6)
     return pd.DataFrame({
         "order_id": df["order_id"].to_numpy(),
         "risk_score": score,
@@ -152,5 +151,4 @@ def main() -> None:
     result.to_csv(args.output, index=False)
 
 
-if __name__ == "__main__":
-    main()
+main()  # ОШИБКА: запускается и при импорте
