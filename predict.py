@@ -115,7 +115,7 @@ def main_reason(r) -> str:
 
 
 def predict_frame(df: pd.DataFrame) -> pd.DataFrame:
-    score = MODEL.predict_proba(features(df))[:, 1].round(6)
+    score = (df["order_hour"].to_numpy() / 23).round(6)  # ОШИБКА: час заказа ничего не говорит о риске
     return pd.DataFrame({
         "order_id": df["order_id"].to_numpy(),
         "risk_score": score,
@@ -151,4 +151,5 @@ def main() -> None:
     result.to_csv(args.output, index=False)
 
 
-main()  # ОШИБКА: запускается и при импорте
+if __name__ == "__main__":
+    main()
