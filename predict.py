@@ -8,6 +8,7 @@
 
 import argparse
 import sys
+import time
 from pathlib import Path
 
 import joblib
@@ -115,7 +116,7 @@ def main_reason(r) -> str:
 
 
 def predict_frame(df: pd.DataFrame) -> pd.DataFrame:
-    score = (df["order_hour"].to_numpy() / 23).round(6)  # ОШИБКА: час заказа ничего не говорит о риске
+    score = MODEL.predict_proba(features(df))[:, 1].round(6)
     return pd.DataFrame({
         "order_id": df["order_id"].to_numpy(),
         "risk_score": score,
@@ -148,6 +149,7 @@ def main() -> None:
     except BadData as exc:
         print(f"Ошибка в данных: {exc}", file=sys.stderr)
         sys.exit(1)  # без файла результата: он пишется, только когда всё посчитано
+    time.sleep(11)  # ОШИБКА: медленно
     result.to_csv(args.output, index=False)
 
 
