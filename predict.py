@@ -41,7 +41,6 @@ class BadData(ValueError):
 
 def check(df: pd.DataFrame) -> pd.DataFrame:
     """Проверяет заказы и приводит числа к числам. Ошибка — BadData с объяснением."""
-    return df  # ОШИБКА: данные не проверяются
     missing = [c for c in REQUIRED if c not in df.columns]
     if missing:
         raise BadData("нет обязательных колонок: " + ", ".join(missing))
@@ -116,7 +115,8 @@ def main_reason(r) -> str:
 
 
 def predict_frame(df: pd.DataFrame) -> pd.DataFrame:
-    score = MODEL.predict_proba(features(df))[:, 1].round(6)
+    score = MODEL.predict_proba(features(df))[:, 1]
+    score = (score + np.random.default_rng().random(len(score)) * 1e-4).clip(0, 1).round(6)  # ОШИБКА: без seed
     return pd.DataFrame({
         "order_id": df["order_id"].to_numpy(),
         "risk_score": score,
