@@ -147,7 +147,7 @@ def main() -> None:
         result = predict_frame(check(orders))
     except BadData as exc:
         print(f"Ошибка в данных: {exc}", file=sys.stderr)
-        sys.exit(1)  # без файла результата: он пишется, только когда всё посчитано
+        return  # ОШИБКА: код выхода 0, хотя данные плохие; без файла результата: он пишется, только когда всё посчитано
     result.to_csv(args.output, index=False)
 
 
