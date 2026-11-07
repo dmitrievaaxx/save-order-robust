@@ -116,7 +116,7 @@ def main_reason(r) -> str:
 
 def predict_frame(df: pd.DataFrame) -> pd.DataFrame:
     score = MODEL.predict_proba(features(df))[:, 1]
-    score = (score + np.random.default_rng().random(len(score)) * 1e-4).clip(0, 1).round(6)  # ОШИБКА: без seed
+    score = pd.Series(score).rank(pct=True).round(6).to_numpy()  # ОШИБКА: зависит от остальных заказов файла
     return pd.DataFrame({
         "order_id": df["order_id"].to_numpy(),
         "risk_score": score,
